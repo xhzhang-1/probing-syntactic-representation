@@ -1,0 +1,64 @@
+dataset:
+  observation_fieldnames:
+     - word_number
+     - sentence
+     - pos
+     - predicate_lemma
+     - predicate_frameset_ID
+     - word_sense
+     - named_entities
+     - word_freqs
+     - predicate_arguments
+     - embeddings
+  corpus:
+    root: data/ontonotes/bc
+    train_path: train_
+    dev_path: development_
+    test_path: test_
+    label_path: bc_labels.pkl
+  embeddings:
+    type: token #{token,subword}
+    root: data/ontonotes/bc/ 
+    train_path: train.bert-layers-7-12-768.hdf5
+    dev_path: development.bert-layers-7-12-768.hdf5
+    test_path: test.bert-layers-7-12-768.hdf5
+  batch_size: 50
+model:
+  use_disk: True
+  pos:
+    hidden_dim: 768 # glove hidden dim
+    use_disk: True
+    model_layer: 4 # BERT-base: {1,...,12}; ELMo: {1,2,3}
+    class_number: 22 #46
+  ner:
+    hidden_dim: 768 # glove hidden dim
+    model_type: BERT-disk # BERT-disk, ELMo-disk, 
+    use_disk: True
+    model_layer: 4 # BERT-base: {1,...,12}; ELMo: {1,2,3}
+    class_number: 19
+  srl:
+    hidden_dim: 1536 # 2*glove hidden dim, [predicate, argument]
+    #embedding_dim: 1024 # ELMo word embedding dim
+    model_type: BERT-disk # BERT-disk, ELMo-disk, 
+    use_disk: True
+    model_layer: 4 # BERT-base: {1,...,12}; ELMo: {1,2,3}
+    class_number: 20 #51
+  dep:
+    hidden_dim: 1536 # 2*glove hidden dim, [predicate, argument]
+    #embedding_dim: 1024 # ELMo word embedding dim
+    model_type: BERT-disk # BERT-disk, ELMo-disk, 
+    use_disk: True
+    model_layer: 4 # BERT-base: {1,...,12}; ELMo: {1,2,3}
+    class_number: 35 #47
+device: cuda
+reporting:
+  root: results/results_ontonotes/all_layer_of_bert/null_Ps_layer11/
+  params_path: classifier.params
+  observation_paths:
+    train_path: train.observations
+    dev_path: dev.observations
+    test_path: test.observations
+  prediction_paths:
+    train_path: train.predictions
+    dev_path: dev.predictions
+    test_path: test.predictions
